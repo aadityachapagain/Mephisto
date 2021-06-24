@@ -41,6 +41,11 @@ def get_running_task_runs():
     task_runs = db.find_task_runs(is_completed=False)
     dict_tasks = [t.to_dict() for t in task_runs if not t.get_is_completed()]
     live_task_count = len([t for t in dict_tasks if not t["sandbox"]])
+    # Manually forse Dict config to python dict
+    for t in dict_tasks:
+        for k in t.keys():
+            if t[k].__class__.__name__ == "DictConfig":
+                t[k] = dict(t[k])
     return jsonify(
         {
             "task_runs": dict_tasks,
@@ -57,11 +62,16 @@ def get_reviewable_task_runs():
     and getting their runs
     """
     db = app.extensions["db"]
-    units = db.find_units(status=AssignmentState.COMPLETED)
+    units = db.find_units(status=AssignmentState.LAUNCHED)
     reviewable_count = len(units)
     task_run_ids = set([u.get_assignment().get_task_run().db_id for u in units])
     task_runs = [TaskRun(db, db_id) for db_id in task_run_ids]
     dict_tasks = [t.to_dict() for t in task_runs]
+    # Manually forse Dict config to python dict
+    for t in dict_tasks:
+        for k in t.keys():
+            if t[k].__class__.__name__ == "DictConfig":
+                t[k] = dict(t[k])
     # TODO(OWN) maybe include warning for auto approve date once that's tracked
     return jsonify({"task_runs": dict_tasks, "total_reviewable": reviewable_count})
 
