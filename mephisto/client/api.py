@@ -62,7 +62,9 @@ def get_reviewable_task_runs():
     and getting their runs
     """
     db = app.extensions["db"]
-    units = db.find_units(status=AssignmentState.LAUNCHED)
+    units_lunched = db.find_units(status=AssignmentState.LAUNCHED)
+    units_completed = db.find_units(status=AssignmentState.COMPLETED)
+    units = units_lunched + units_completed
     reviewable_count = len(units)
     task_run_ids = set([u.get_assignment().get_task_run().db_id for u in units])
     task_runs = [TaskRun(db, db_id) for db_id in task_run_ids]
