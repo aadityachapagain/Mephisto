@@ -17,11 +17,13 @@ def cli():
 
 
 @cli.command("web")
-def web():
+@click.option("--host", type=str, default='127.0.0.1',)
+@click.option("--port", type=int, default=5000)
+def web(host, port):
     """Launch a local webserver with the Mephisto UI"""
     from mephisto.client.full.server import app
 
-    app.run(debug=False)
+    app.run(debug=False, host=host, port=port)
 
 
 @cli.command("config")
