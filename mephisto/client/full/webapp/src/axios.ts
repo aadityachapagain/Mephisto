@@ -3,12 +3,11 @@
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
  */
-
 import { configure } from "axios-hooks";
 import Axios, { AxiosRequestConfig } from "axios";
 
 const axios = Axios.create({
-  baseURL: "http://localhost:5000/api/v1/",
+  baseURL: process.env.REACT_APP_BASEURL,
 });
 
 declare module "axios" {
