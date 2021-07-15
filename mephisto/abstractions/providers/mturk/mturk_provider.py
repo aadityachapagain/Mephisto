@@ -161,3 +161,7 @@ class MTurkProvider(CrowdProvider):
         assert isinstance(requester, MTurkRequester), "Must be an mturk requester"
         client = requester._get_client(requester._requester_name)
         delete_qualification(client, mapping["mturk_qualification_id"])
+
+    def get_link(self, task_run_id: str) -> str:
+        hit_type_id = self.datastore.get_run(task_run_id)["hit_type_id"]
+        return f"https://www.mturk.com/mturk/preview?groupId={hit_type_id}"

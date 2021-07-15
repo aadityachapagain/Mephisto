@@ -57,7 +57,7 @@ class MockWorker(Worker):
         """Determine if this worker is eligible for the given task run"""
         return True
 
-    def email_worker(self, subject: str, message_text: str) -> Tuple[bool, str]:
+    def email_worker(self, subject: str, message_text: str, requester: "Requester") -> Tuple[bool, str]:
         return True, ""
 
     @staticmethod

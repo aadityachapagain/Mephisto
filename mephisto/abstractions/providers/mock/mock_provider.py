@@ -79,6 +79,10 @@ class MockProvider(CrowdProvider):
         """Mocks don't do any initialization"""
         return None
 
+    def get_link(self, task_run_id: str) -> str:
+        # TODO HIT LINK FOR MOCK PROVIDER
+        return "<HIT LINK YET TO BE IMPLEMENTED FOR MOCK>"
+
     @classmethod
     def get_wrapper_js_path(cls):
         """

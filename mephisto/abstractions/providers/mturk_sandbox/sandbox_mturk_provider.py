@@ -83,3 +83,7 @@ class SandboxMTurkProvider(MTurkProvider):
     def cleanup_qualification(self, qualification_name: str) -> None:
         """Remove the qualification from the sandbox server"""
         return super().cleanup_qualification(f"{qualification_name}_sandbox")
+
+    def get_link(self, task_run_id: str) -> str:
+        hit_type_id = self.datastore.get_run(task_run_id)["hit_type_id"]
+        return f"https://workersandbox.mturk.com/mturk/preview?groupId={hit_type_id}"

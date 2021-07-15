@@ -312,6 +312,10 @@ class TaskRun(metaclass=MephistoDBBackedMeta):
             total_amount += assign.get_cost_of_statuses(AssignmentState.payable())
         return total_amount
 
+    def get_run_link(self) -> str:
+        provider = self.get_provider()
+        return provider.get_link(self.db_id)
+
     def to_dict(self) -> Dict[str, Any]:
         """Return a dict containing any important information about this task run"""
         return {

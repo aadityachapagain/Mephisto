@@ -131,6 +131,13 @@ class CrowdProvider(ABC):
         """
         raise NotImplementedError()
 
+    @abstractmethod
+    def get_link(self, task_run_id: str) -> str:
+        """
+        Return links to the group of units lunched in given run_id
+        """
+        raise NotImplementedError()
+
     def cleanup_qualification(self, qualification_name: str) -> None:
         """
         Remove the linked qualification from the crowdprovider if it exists
