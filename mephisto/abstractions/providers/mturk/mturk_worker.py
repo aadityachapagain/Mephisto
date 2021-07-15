@@ -14,6 +14,7 @@ from mephisto.abstractions.providers.mturk.mturk_utils import (
     is_worker_blocked,
     give_worker_qualification,
     remove_worker_qualification,
+    email_worker
 )
 from mephisto.abstractions.providers.mturk.mturk_requester import MTurkRequester
 
@@ -197,6 +198,14 @@ class MTurkWorker(Worker):
         through to be able to access the task, they should be eligible
         """
         return True
+
+    def email_worker(self, subject: str, message_text: str, requester: "Requester") -> Tuple[bool, str]:
+        """
+        Email workers with given subject and message text
+        """
+        requester = cast("MTurkRequester", requester)
+        client = self._get_client(requester._requester_name)
+        return email_worker(client, self._worker_name, subject, message_text)
 
     @staticmethod
     def new(db: "MephistoDB", worker_id: str) -> "Worker":

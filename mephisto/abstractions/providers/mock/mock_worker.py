@@ -57,6 +57,9 @@ class MockWorker(Worker):
         """Determine if this worker is eligible for the given task run"""
         return True
 
+    def email_worker(self, subject: str, message_text: str) -> Tuple[bool, str]:
+        return True, ""
+
     @staticmethod
     def new(db: "MephistoDB", worker_id: str) -> "Worker":
         return MockWorker._register_worker(db, worker_id, PROVIDER_TYPE)

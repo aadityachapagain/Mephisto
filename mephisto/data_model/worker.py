@@ -267,6 +267,13 @@ class Worker(metaclass=MephistoDBBackedABCMeta):
         """Register this worker with the crowdprovider, if necessary"""
         pass
 
+    @abstractmethod
+    def email_worker(self, subject: str, message_text: str, requester: "Requester") -> Tuple[bool, str]:
+        """
+        Send email to this worker
+        """
+        raise NotImplementedError()
+
     @staticmethod
     def new(db: "MephistoDB", worker_name: str) -> "Worker":
         """
