@@ -943,6 +943,31 @@ class LocalMephistoDB(MephistoDB):
             rows = c.fetchall()
             return [Worker(self, str(r["worker_id"]), row=r) for r in rows]
 
+    def find_workers_with_qualification(self, qualification_name: str) -> List[Worker]:
+        """
+        Returns list of workers with qualification name granted.
+        """
+        found_qualifications = self.find_qualifications(qualification_name=qualification_name)
+        if len(found_qualifications) == 0:
+            raise EntryDoesNotExistException(f"No qualification found by name {qualification_name}")
+
+        qual_id = found_qualifications[0].db_id
+
+        with self.table_access_condition:
+            conn = self._get_connection()
+            c = conn.cursor()
+            c.execute(
+                """
+                SELECT workers.*
+                FROM granted_qualifications
+                JOIN workers ON granted_qualifications.worker_id = workers.worker_id
+                WHERE granted_qualifications.qualification_id = ?1
+                """,
+                (qual_id,)
+            )
+            rows = c.fetchall()
+            return [Worker(self, str(r["worker_id"]), row=r) for r in rows]
+
     def new_agent(
         self,
         worker_id: str,

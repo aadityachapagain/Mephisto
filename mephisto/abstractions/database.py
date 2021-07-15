@@ -421,6 +421,14 @@ class MephistoDB(ABC):
         raise NotImplementedError()
 
     @abstractmethod
+    def find_workers_with_qualification(self, qualification_name: str) -> List[Worker]:
+        """
+        Returns list of workers with qualification name granted.
+        """
+        raise NotImplementedError()
+
+
+    @abstractmethod
     def new_agent(
         self,
         worker_id: str,
