@@ -89,6 +89,14 @@ class TaskConfigArgs:
             )
         },
     )
+    maximum_units_per_worker_per_run: int = field(
+        default=0,
+        metadata={
+            "help": (
+                "Maximum tasks of this task name that a worker can work on across a run. (0 is infinite)"
+            )
+        }
+    )
 
 
 class TaskConfig:
@@ -120,6 +128,7 @@ class TaskConfig:
         ]
         self.allowed_concurrent: int = self.args["allowed_concurrent"]
         self.maximum_units_per_worker: int = self.args["maximum_units_per_worker"]
+        self.maximum_units_per_worker_per_run: int = self.args["maximum_units_per_worker_per_run"]
 
     @classmethod
     def get_mock_params(cls) -> str:

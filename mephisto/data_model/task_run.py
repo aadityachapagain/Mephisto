@@ -84,7 +84,7 @@ class TaskRun(metaclass=MephistoDBBackedMeta):
         """
         config = self.get_task_config()
 
-        if config.allowed_concurrent != 0 or config.maximum_units_per_worker:
+        if config.allowed_concurrent != 0 or config.maximum_units_per_worker or config.maximum_units_per_worker_per_run:
             current_units = self.db.find_units(
                 task_run_id=self.db_id,
                 worker_id=worker.db_id,
@@ -113,6 +113,22 @@ class TaskRun(metaclass=MephistoDBBackedMeta):
                         f"{worker} at maximum units {currently_active}, {currently_completed}"
                     )
                     return []  # Currently at the maximum number of units for this task
+            if config.maximum_units_per_worker_per_run != 0:
+                currently_completed = len(
+                    self.db.find_units(
+                        task_run_id=self.db_id,
+                        worker_id=worker.db_id,
+                        status=AssignmentState.COMPLETED,
+                    )
+                )
+                if (
+                    currently_active + currently_completed
+                    >= config.maximum_units_per_worker_per_run
+                ):
+                    logger.debug(
+                        f"{worker} at maximum units {currently_active}, {currently_completed} in run {self.db_id}"
+                    )
+                    return []
 
         task_units: List["Unit"] = self.get_units()
         unit_assigns: Dict[str, List["Unit"]] = {}
